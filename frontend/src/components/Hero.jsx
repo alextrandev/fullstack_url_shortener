@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { alpha } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -6,8 +7,51 @@ import Link from '@mui/material/Link';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { useState } from 'react';
 
 export default function Hero() {
+  const [urlInput, setUrlInput] = useState('');
+
+  const handleUrlInputChange = e => setUrlInput(e.target.value);
+
+  const handleUrlSubmit = () => {
+    const currentDate = new Date();
+    const expireDate = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
+    console.log(currentDate.toISOString().replaceAll(":", "-").replaceAll(".", "-"));
+    
+    axios.post('https://unelma.io/api/v1/link',
+      {
+        'alias': currentDate.toISOString().replaceAll(/-./g, "-"),
+        'type': 'direct',
+        'password': null,
+        'active': true,
+        'expires_at': currentDate.toISOString().split("T")[0],
+        'activates_at': expireDate.toISOString().split("T")[0],
+        'utm': 'utm_source=google&utm_medium=banner',
+        'domain_id': null,
+        'title': 'url',
+        'description': 'url',
+        'pixels': [495],
+        'groups': [54],
+        'rules': [
+          {
+            'type': 'geo',
+            'key': 'us',
+            'value': 'https://facebook.com'
+          }
+        ],
+        'long_url': urlInput
+      },
+      {
+        headers: {
+          'accept': 'application/json',
+          'Authorization': 'Bearer 4|fYsFZOq4znqBkh7GjQFvYJmErMgZt44NjwLV8fDhb7efb76a',
+          'Content-Type': 'application/json'
+        }
+      }
+    );
+  }
+
   return (
     <Box
       id="hero"
@@ -76,14 +120,19 @@ export default function Hero() {
               aria-label="Enter your URL"
               placeholder="Enter your URL"
               inputProps={{
-                autocomplete: 'off',
-                ariaLabel: 'Enter your URL',
+                autoComplete: 'off',
               }}
+              onChange={handleUrlInputChange}
             />
-            <Button variant="contained" color="primary">
+            <Button variant="contained" color="primary" onClick={handleUrlSubmit}>
               Shorten
             </Button>
           </Stack>
+          <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
+            <Link href="https://unelma.io" color="primary">
+              {urlInput}
+            </Link>
+          </Typography>
           <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
             API provided by &nbsp;
             <Link href="https://unelma.io" color="primary">
