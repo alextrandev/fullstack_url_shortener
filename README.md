@@ -30,6 +30,23 @@ npm install @mui/material @emotion/react @emotion/styled @mui/icons-material
 npm install axios
 ```
 
+### Install dotenv
+
+```shell
+npm install dotenv --save
+```
+
+### Create .env file to store your api key
+
+- Go to [unelma.io](https://unelma.io/) and sign up
+- Go to account settings and create a new api key, copy the key
+- Create a ".env" file inside the root of the folder
+- In the .env file, write this line and put the key inside the quote
+
+```env
+VITE_UNELMA_API_TOKEN=""
+```
+
 ### Start the project
 
 ```shell
