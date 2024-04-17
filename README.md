@@ -1,6 +1,7 @@
 # fullstack_url_shortener
 
 Shorten url using unelma.io api
+_Shorted URL will expired after 1 year_
 
 ## Tech stack
 
@@ -11,16 +12,21 @@ Shorten url using unelma.io api
 
 ## To run project after cloning
 
-### First install required module and libraries
+### Install node module
 
 ```shell
-# install node module
 npm install
+```
 
-# install material UI dependency
+### Install material UI dependency
+
+```shell
 npm install @mui/material @emotion/react @emotion/styled @mui/icons-material
+```
 
-# install axios
+### Install axios
+
+```shell
 npm install axios
 ```
 
