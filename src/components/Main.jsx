@@ -55,7 +55,7 @@ export default function Hero() {
         {
           headers: {
             'accept': 'application/json',
-            'Authorization': 'Bearer 4|fYsFZOq4znqBkh7GjQFvYJmErMgZt44NjwLV8fDhb7efb76a',
+            'Authorization': `Bearer ${import.meta.env.VITE_UNELMA_API_TOKEN}`,
             'Content-Type': 'application/json'
           }
         }
