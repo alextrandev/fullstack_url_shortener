@@ -11,7 +11,7 @@ export default function UrlDetails({urlInput, shortUrl, longUrl, expireDate}) {
         {longUrl !== '' && 
           <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
               Long URL:&nbsp;
-              <Link href={longUrl} color="primary">
+              <Link href={longUrl} target="_blank" color="primary">
                   {longUrl}
               </Link>
           </Typography>
@@ -20,7 +20,7 @@ export default function UrlDetails({urlInput, shortUrl, longUrl, expireDate}) {
         {shortUrl !== '' && 
           <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
               Short URL:&nbsp;
-              <Link href={shortUrl} color="primary">
+              <Link href={shortUrl} target="_blank" color="primary">
                   {shortUrl}
               </Link>
           </Typography>

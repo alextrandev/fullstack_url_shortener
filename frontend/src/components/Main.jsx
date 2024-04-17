@@ -8,10 +8,15 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import { useState } from 'react';
+import UrlDetails from './UrlDetails';
 
 export default function Hero() {
   const [urlInput, setUrlInput] = useState('');
-  const [msg, setMsg] = useState('Paste your URL and click &lsquo;Shorten&lsquo;.');
+  const [msg, setMsg] = useState('Paste your URL and click Shorten');
+  const [shortUrl, setShortUrl] = useState('');
+  const [expireDate, setExpireDate] = useState('');
+  const [longUrl, setLongUrl] = useState ('');
+
   const handleUrlInputChange = e => setUrlInput(e.target.value);
 
   const handleUrlSubmit = () => {
@@ -56,9 +61,12 @@ export default function Hero() {
         }
       )
       .then(response => {
-        console.log(response.data);
-        setMsg("URL shortened. Thank you for using Short URL!");
-        })
+        const link = response.data.link;
+        setMsg("Thank you for using Short URL! Here is your short URL: ");
+        setShortUrl(link.short_url);
+        setLongUrl(link.long_url);
+        setExpireDate(link.expires_at);
+      })
       .catch(error => console.log(error.toJSON()))
   }
 
@@ -80,8 +88,8 @@ export default function Hero() {
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          pt: { xs: 14, sm: 27 },
-          pb: { xs: 8, sm: 22 },
+          pt: { xs: 14, sm: 25 },
+          pb: { xs: 8, sm: 20 },
         }}
       >
         <Stack spacing={2} useFlexGap sx={{ width: { xs: '100%', sm: '70%' } }}>
@@ -114,6 +122,9 @@ export default function Hero() {
             sx={{ alignSelf: 'center', width: { sm: '100%', md: '80%' } }}
           >
             {msg}
+              <Link href={shortUrl} target="_blank" color="primary">
+                  {shortUrl}
+              </Link>
           </Typography>
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
@@ -138,17 +149,12 @@ export default function Hero() {
               Shorten
             </Button>
           </Stack>
-          <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
-            <Link href="https://unelma.io" color="primary">
-              {urlInput}
-            </Link>
-          </Typography>
-          <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
-            API provided by &nbsp;
-            <Link href="https://unelma.io" color="primary">
-              Unema
-            </Link>
-          </Typography>
+          <UrlDetails 
+            urlInput={urlInput} 
+            shortUrl={shortUrl}
+            longUrl={longUrl}
+            expireDate={expireDate}
+          />
         </Stack>
       </Container>
     </Box>
