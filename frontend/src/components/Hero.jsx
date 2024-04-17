@@ -11,45 +11,55 @@ import { useState } from 'react';
 
 export default function Hero() {
   const [urlInput, setUrlInput] = useState('');
-
+  const [msg, setMsg] = useState('Paste your URL and click &lsquo;Shorten&lsquo;.');
   const handleUrlInputChange = e => setUrlInput(e.target.value);
 
   const handleUrlSubmit = () => {
     const currentDate = new Date();
     const expireDate = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
-    console.log(currentDate.toISOString().replaceAll(":", "-").replaceAll(".", "-"));
+    const token = currentDate.toISOString().replace(/\D/g, "").slice(4, 14);
+
+    if (urlInput == '') {
+      return setMsg("URL cannot be empty. Try again");
+    }
     
-    axios.post('https://unelma.io/api/v1/link',
-      {
-        'alias': currentDate.toISOString().replaceAll(/-./g, "-"),
-        'type': 'direct',
-        'password': null,
-        'active': true,
-        'expires_at': currentDate.toISOString().split("T")[0],
-        'activates_at': expireDate.toISOString().split("T")[0],
-        'utm': 'utm_source=google&utm_medium=banner',
-        'domain_id': null,
-        'title': 'url',
-        'description': 'url',
-        'pixels': [495],
-        'groups': [54],
-        'rules': [
-          {
-            'type': 'geo',
-            'key': 'us',
-            'value': 'https://facebook.com'
+    axios
+      .post('https://unelma.io/api/v1/link',
+        {
+          'alias': token,
+          'type': 'direct',
+          'password': null,
+          'active': true,
+          'expires_at': currentDate.toISOString().split("T")[0],
+          'activates_at': expireDate.toISOString().split("T")[0],
+          'utm': 'utm_source=google&utm_medium=banner',
+          'domain_id': null,
+          'title': token,
+          'description': token,
+          'pixels': [495],
+          'groups': [54],
+          'rules': [
+            {
+              'type': 'geo',
+              'key': 'us',
+              'value': 'https://facebook.com'
+            }
+          ],
+          'long_url': urlInput
+        },
+        {
+          headers: {
+            'accept': 'application/json',
+            'Authorization': 'Bearer 4|fYsFZOq4znqBkh7GjQFvYJmErMgZt44NjwLV8fDhb7efb76a',
+            'Content-Type': 'application/json'
           }
-        ],
-        'long_url': urlInput
-      },
-      {
-        headers: {
-          'accept': 'application/json',
-          'Authorization': 'Bearer 4|fYsFZOq4znqBkh7GjQFvYJmErMgZt44NjwLV8fDhb7efb76a',
-          'Content-Type': 'application/json'
         }
-      }
-    );
+      )
+      .then(response => {
+        console.log(response.data);
+        setMsg("URL shortened. Thank you for using Short URL!");
+        })
+      .catch(error => console.log(error.toJSON()))
   }
 
   return (
@@ -103,7 +113,7 @@ export default function Hero() {
             color="text.secondary"
             sx={{ alignSelf: 'center', width: { sm: '100%', md: '80%' } }}
           >
-            Paste your URL and click &lsquo;Shorten&lsquo;.
+            {msg}
           </Typography>
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
