@@ -34,6 +34,12 @@ export default function Footer() {
       >
         <div>
           <Copyright />
+          <Typography variant="caption" textAlign="center" sx={{ opacity: 0.8 }}>
+            API provided by &nbsp;
+            <Link href="https://unelma.io" color="primary">
+              Unema
+            </Link>
+          </Typography>
         </div>
       </Box>
     </Container>
