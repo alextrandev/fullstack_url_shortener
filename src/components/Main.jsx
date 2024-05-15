@@ -21,11 +21,9 @@ export default function Hero() {
   const handleUrlInputChange = e => setUrlInput(e.target.value);
 
   const handleUrlSubmit = () => {
-    if (urlInput == '') {
-      return setMsg("URL cannot be empty. Try again");
-    }
-
+    if (urlInput == '') return setMsg("URL cannot be empty. Try again");
     setLoading(true);
+
     const currentDate = new Date();
     const expireDate = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
     const token = currentDate.toISOString().replace(/\D/g, "").slice(4, 14);
@@ -70,7 +68,10 @@ export default function Hero() {
         setExpireDate(link.expires_at);
       })
       .catch(error => console.log(error.toJSON()))
-      .finally(() => setLoading(false))
+      .finally(() => {
+        setUrlInput('')
+        setLoading(false)
+      })
   }
 
   return (
@@ -125,6 +126,11 @@ export default function Hero() {
             sx={{ alignSelf: 'center', width: { sm: '100%', md: '80%' } }}
           >
             {msg}
+          </Typography>
+          <Typography
+            textAlign="center"
+            sx={{ alignSelf: 'center', width: { sm: '100%', md: '80%' } }}
+          >
             <Link href={shortUrl} target="_blank" color="primary">
               {shortUrl}
             </Link>
@@ -143,6 +149,7 @@ export default function Hero() {
               variant="outlined"
               aria-label="Enter your URL"
               placeholder="Enter your URL"
+              value={urlInput}
               inputProps={{
                 autoComplete: 'off',
               }}
