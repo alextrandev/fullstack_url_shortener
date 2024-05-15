@@ -15,19 +15,19 @@ export default function Hero() {
   const [msg, setMsg] = useState('Paste your URL and click Shorten');
   const [shortUrl, setShortUrl] = useState('');
   const [expireDate, setExpireDate] = useState('');
-  const [longUrl, setLongUrl] = useState ('');
+  const [longUrl, setLongUrl] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleUrlInputChange = e => setUrlInput(e.target.value);
 
   const handleUrlSubmit = () => {
+    if (urlInput == '') return setMsg("URL cannot be empty. Try again");
+    setLoading(true);
+
     const currentDate = new Date();
     const expireDate = new Date(currentDate.getFullYear() + 1, currentDate.getMonth(), currentDate.getDate());
     const token = currentDate.toISOString().replace(/\D/g, "").slice(4, 14);
 
-    if (urlInput == '') {
-      return setMsg("URL cannot be empty. Try again");
-    }
-    
     axios
       .post('https://unelma.io/api/v1/link',
         {
@@ -68,6 +68,10 @@ export default function Hero() {
         setExpireDate(link.expires_at);
       })
       .catch(error => console.log(error.toJSON()))
+      .finally(() => {
+        setUrlInput('')
+        setLoading(false)
+      })
   }
 
   return (
@@ -122,9 +126,14 @@ export default function Hero() {
             sx={{ alignSelf: 'center', width: { sm: '100%', md: '80%' } }}
           >
             {msg}
-              <Link href={shortUrl} target="_blank" color="primary">
-                  {shortUrl}
-              </Link>
+          </Typography>
+          <Typography
+            textAlign="center"
+            sx={{ alignSelf: 'center', width: { sm: '100%', md: '80%' } }}
+          >
+            <Link href={shortUrl} target="_blank" color="primary">
+              {shortUrl}
+            </Link>
           </Typography>
           <Stack
             direction={{ xs: 'column', sm: 'row' }}
@@ -140,17 +149,23 @@ export default function Hero() {
               variant="outlined"
               aria-label="Enter your URL"
               placeholder="Enter your URL"
+              value={urlInput}
               inputProps={{
                 autoComplete: 'off',
               }}
               onChange={handleUrlInputChange}
             />
-            <Button variant="contained" color="primary" onClick={handleUrlSubmit}>
-              Shorten
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleUrlSubmit}
+              disabled={loading}
+            >
+              {loading ? 'Shortening...' : 'Shorten'}
             </Button>
           </Stack>
-          <UrlDetails 
-            urlInput={urlInput} 
+          <UrlDetails
+            urlInput={urlInput}
             shortUrl={shortUrl}
             longUrl={longUrl}
             expireDate={expireDate}
